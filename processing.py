@@ -1,3 +1,5 @@
+
+
 from config import STRENGTH, PRESSURECUTOFF, PARAMETERS
 import numpy as np
 import matplotlib.pyplot as plt
@@ -55,72 +57,3 @@ def magneticField(mirroredData, size):
 
 
     return(MagneticData)
-
-
-def getRadius(mirroredData, size, dx):
-    '''Calculate the radius of the object based on its density distribution and a specified pressure cutoff. 
-    The radius is determined by finding the maximum distance from the center of the cube to any point 
-    where the density exceeds a threshold derived from the maximum density.'''
-    Density = mirroredData[0, :, :, :]
-    maxDensity = np.max(Density)
-    threshold = maxDensity * PRESSURECUTOFF
-    indices = np.where(Density >= threshold)
-    x_indices, y_indices, z_indices = indices
-    x_center = size // 2
-    y_center = size // 2
-    z_center = size // 2
-    distances = np.sqrt((x_indices - x_center) ** 2 + (y_indices - y_center) ** 2 + (z_indices - z_center) ** 2)
-    radius = np.max(distances) * dx
-    print(f"Calculated radius: {radius:.4f}")
-    return radius
-
-
-def dataRotator(rawData, theta, phi, size, fileNumber):
-    '''Rotates the data based on the given angles theta and phi. The rotation is applied in two steps.'''
-
-    if theta == 0 and phi == 0:
-        return rawData
-
-    print("rotating file number " + str(fileNumber))
-
-    rotated = rawData
-
-    if theta != 0:
-        rotated = scipy.ndimage.rotate(
-            rotated,
-            theta,
-            axes=(2, 3),      # rotate y-x plane
-            reshape=False,
-            order=1,
-            mode='nearest'
-        )
-
-    if phi != 0:
-        rotated = scipy.ndimage.rotate(
-            rotated,
-            phi,
-            axes=(1, 2),      # adjust axes depending on intended plane
-            reshape=False,
-            order=1,
-            mode='nearest'
-        )
-
-    return rotated
-
-
-def CenterOfMass(plotData, size):
-    '''Calculates the center of mass of the given 2D plot data. 
-    The center of mass is computed as the weighted average of the coordinates.'''
-    numX = 0
-    numY = 0
-    den = 0
-    #print(size)
-    for xCord in range(0, size):
-        for yCord in range(0,size):
-            numX = numX + xCord * plotData[xCord,yCord]
-            numY = numY + yCord * plotData[xCord,yCord]
-            den = den + plotData[xCord,yCord]
-    CofMX = numX / den
-    CofMY = numY / den
-    print("Center of mass is at [" +str(CofMX) + ',' + str(CofMY) + ']')
-    return(CofMX,CofMY)
