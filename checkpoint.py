@@ -24,7 +24,7 @@ class Checkpoint:
         self.dx = f['Grid']['dxs'][0]
 
     def apply_pressure_cutoff(self):
-        
+        '''Take any data point whose pressure is under a certain value and set its density almost 0'''
         pressureIndex = PARAMETERS.index(1)
         densityIndex = PARAMETERS.index(0)
         mask = self.data[pressureIndex] < PRESSURECUTOFF
