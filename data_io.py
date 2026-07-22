@@ -1,3 +1,5 @@
+'''Legacy code.  Nolonger used as it has been replaced by checkpoint.py'''
+
 from config import PRESSURECUTOFF, PARAMETERS
 import numpy as np
 import matplotlib.pyplot as plt
